@@ -42,6 +42,7 @@ const Newsletter = () => {
 
       {/* Right: Newsletter Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-6 py-12 text-center">
+      <div className="border-white border-t-4 border-r-4 p-20">
         <h3 className="text-3xl font-semibold">Subscribe to our newsletter</h3>
         <p className="text-lg text-gray-300 mt-2">
           Get the latest updates on bestsellers, new arrivals, and exclusive offers.
@@ -66,6 +67,8 @@ const Newsletter = () => {
           </div>
           {message && <p className="mt-3 text-sm">{message}</p>}
         </form>
+      </div>
+        
       </div>
     </div>
   );
