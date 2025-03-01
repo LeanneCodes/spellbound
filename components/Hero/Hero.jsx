@@ -46,7 +46,7 @@ const Hero = () => {
                     Find Your<br />Next Book
                 </h1>
                 <p className="text-lg md:text-2xl">
-                    Showcasing the most popular and best-selling books at Spellbound. Let us help you find your next read.
+                    Showcasing the trending books and authors at <span className="font-semibold">Spellbound</span>.<br />Let us help you find your next read.
                 </p>
                 <div>
                     <Button link={"/books"} text={"Explore Now"} />

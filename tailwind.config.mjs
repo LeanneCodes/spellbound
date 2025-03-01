@@ -11,7 +11,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         beige: "#faf8f6",
-        black: "#0d0c22",
+        offBlack: "#0d0c22",
       },
       fontFamily: {
         newsreader: ["Newsreader", "serif"], // Custom font
