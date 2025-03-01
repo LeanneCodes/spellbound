@@ -32,8 +32,8 @@ const Hero = () => {
         fetchData();
     }, []);
 
-    if (loading) return <p>Loading books...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (loading) return <p className="text-center">Loading books...</p>;
+    if (error) return <p className="text-red-500 text-center">Error! Unable to load books at this moment.</p>;
 
     // Extract books data
     const books = data?.results?.books || [];
