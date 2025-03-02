@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Button from "../Button/Button";
+import Button from "@/components/Button/Button";
 
 const AuthorCard = () => {
     const [authors, setAuthors] = useState([]);
@@ -44,6 +44,7 @@ const AuthorCard = () => {
 
                 setAuthors(sortedAuthors);
             } catch (error) {
+                console.error("Fetch error:", error);
                 setError(error.message);
             } finally {
                 setLoading(false);
@@ -58,10 +59,12 @@ const AuthorCard = () => {
 
     return (
         <div className="w-full mt-5">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <ul key={authors.length} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {authors.map((authorData, index) => {
-                    const authorBooks = books.filter(book => book.author === authorData.author); // Get books by this author
-                    const bookCover = authorBooks.length > 0 ? authorBooks[0].book_image : null; // Use the first book cover found
+                    const authorBooks = books?.length > 0 
+                      ? books.filter(book => book.author === authorData.author) 
+                      : [];
+                    const bookCover = authorBooks.length > 0 ? authorBooks[0].book_image : null;
 
                     return (
                         <li 
@@ -92,7 +95,7 @@ const AuthorCard = () => {
                                 {/* Learn More Button */}
                                 <div className="mt-4">
                                     <Button 
-                                        link={`/authors/${encodeURIComponent(authorData.author)}`} 
+                                        link={`/author/${encodeURIComponent(authorData.author)}`} 
                                         text={"Learn more"} 
                                         className="bg-beige text-offBlack hover:bg-offBlack hover:text-beige" 
                                     />

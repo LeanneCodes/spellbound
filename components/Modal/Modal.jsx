@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { ShoppingCart, Store, BookOpen } from "lucide-react";
 
-const Modal = ({ book, onClose }) => {
+const Modal = ({ book, onClose, children }) => {
   if (!book) return null; // Don't render if no book is selected
 
   const getStoreIcon = (storeName) => {
