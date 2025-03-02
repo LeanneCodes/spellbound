@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export default function useBookData() {
-  const [books, setBooks] = useState([]);
+  const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -18,7 +18,7 @@ export default function useBookData() {
 
         const data = await res.json();
         console.log(data)
-        setBooks(data.results?.books || []);
+        setLists(data.results?.lists || []);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -29,5 +29,5 @@ export default function useBookData() {
     fetchData();
   }, []);
 
-  return { books, loading, error };
+  return { lists, loading, error };
 }

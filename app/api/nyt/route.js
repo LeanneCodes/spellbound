@@ -1,7 +1,7 @@
 export async function GET() {
   try {
     const response = await fetch(
-      `https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=${process.env.NYT_API_KEY}`
+      `https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=${process.env.NYT_API_KEY}`
     );
 
     if (!response.ok) {

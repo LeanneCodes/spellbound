@@ -9,7 +9,7 @@ const Bestsellers = () => {
   return (
     <div className="container mx-auto mb-20">
       <div className="flex w-full justify-between mt-20">
-        <h2 className="text-3xl font-semibold">Bestsellers</h2>
+        <h2 className="text-3xl font-semibold">Top 18 Bestsellers</h2>
         <button 
           className="font-semibold" 
           onClick={() => setShowAll(!showAll)}

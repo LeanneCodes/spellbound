@@ -35,8 +35,15 @@ const Hero = () => {
     if (loading) return <p className="text-center">Loading books...</p>;
     if (error) return <p className="text-red-500 text-center">Error! Unable to load books at this moment.</p>;
 
-    // Extract books data
-    const books = data?.results?.books || [];
+    // Extract and flatten book lists
+    const lists = data?.results?.lists || [];
+    let books = lists.flatMap(list => list.books); // Flatten all books into a single array
+
+    // Remove duplicate books based on ISBN
+    const uniqueBooks = Array.from(new Map(books.map(book => [book.primary_isbn13, book])).values());
+
+    // Limit to only the first 5 books for rotation
+    const booksForCarousel = uniqueBooks.slice(0, 15);
 
     return (
       <div className="bg-beige w-full h-[500px]">
@@ -54,7 +61,7 @@ const Hero = () => {
             </div>
             {/* Ensure the Carousel is fully centered */}
             <div className="hidden md:grid w-full h-full items-center justify-center relative">
-                <BookCarousel books={books} />
+                <BookCarousel books={booksForCarousel} />
             </div>
 
             {/* Pagination Indicator Outside */}
