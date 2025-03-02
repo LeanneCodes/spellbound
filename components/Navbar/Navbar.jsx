@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, XMarkIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,6 +19,8 @@ export default function Navbar() {
   const [authors, setAuthors] = useState([]);
   const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [books, setBooks] = useState([]);
   const [hasUpdate, setHasUpdate] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -38,6 +40,15 @@ export default function Navbar() {
           );
           setAuthors(uniqueAuthors);
           setFilteredAuthors(uniqueAuthors);
+
+          // Extract books with title and unique ID
+          const bookList = data.results.lists.flatMap((list) =>
+            list.books.map((book) => ({
+              title: book.title,
+              id: book.primary_isbn13,
+            }))
+          );
+          setBooks(bookList);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -51,9 +62,16 @@ export default function Navbar() {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    const filtered = authors.filter((author) => author.toLowerCase().includes(query));
-    setFilteredAuthors(filtered);
+    const filtered = books.filter((book) => book.title.toLowerCase().includes(query));
+    setFilteredBooks(filtered);
   };
+
+  const handleBookSelect = (bookTitle) => {
+    const formattedTitle = encodeURIComponent(bookTitle.replace(/\s+/g, "-").toLowerCase());
+    router.push(`/book/${formattedTitle}`);
+    setSearchQuery("");
+    setFilteredBooks([]);
+  };  
 
   const handleNotificationClick = () => {
     if (hasUpdate) {
@@ -119,13 +137,13 @@ export default function Navbar() {
                     Authors
                   </MenuButton>
                   <MenuItems className="absolute z-10 mt-2 w-60 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 max-h-80 overflow-auto">
-                    {authors.length > 12 && (
+                    {filteredAuthors.length > 12 && (
                       <div className="px-3 py-2">
                         <input
                           type="text"
                           placeholder="Search authors..."
                           value={searchQuery}
-                          onChange={handleSearch}
+                          onChange={(e) => setFilteredAuthors(authors.filter((author) => author.toLowerCase().includes(e.target.value.toLowerCase())))}
                           className="w-full p-2 border border-gray-300 rounded-md text-sm"
                         />
                       </div>
@@ -151,12 +169,34 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
+          {/* Search Bar & Notification Bell */}
+          <div className="flex items-center space-x-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search for books..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="p-2 w-72 border border-gray-300 rounded-md text-sm"
+              />
+              <MagnifyingGlassIcon className="absolute right-2 top-2 h-5 w-5 text-gray-500" />
+              
+              {filteredBooks.length > 0 && (
+                <div className="absolute mt-1 w-72 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 z-10 max-h-60 overflow-auto">
+                  {filteredBooks.map((book) => (
+                    <button key={book.id} onClick={() => handleBookSelect(book.title)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      {book.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Notification Bell */}
-            <button onClick={handleNotificationClick} className="relative p-1 rounded-full bg-beige text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6 text-offBlack" />
+            <button onClick={handleNotificationClick} className="relative p-1 rounded-full">
+              <BellIcon className="size-6 text-offBlack" />
               {hasUpdate && <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />}
             </button>
           </div>
