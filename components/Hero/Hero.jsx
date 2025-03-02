@@ -43,7 +43,7 @@ const Hero = () => {
     const uniqueBooks = Array.from(new Map(books.map(book => [book.primary_isbn13, book])).values());
 
     // Limit to only the first 5 books for rotation
-    const booksForCarousel = uniqueBooks.slice(0, 15);
+    const booksForCarousel = uniqueBooks.slice(0, 18);
 
     return (
       <div className="bg-beige w-full h-[500px]">
@@ -56,7 +56,7 @@ const Hero = () => {
                     Showcasing the trending books and authors at <span className="font-semibold">Spellbound</span>.<br />Let us help you find your next read.
                 </p>
                 <div>
-                    <Button link={"/books"} text={"Explore Now"} />
+                    <Button link={"/books"} text={"Explore now"} className="bg-offBlack text-beige" />
                 </div>
             </div>
             {/* Ensure the Carousel is fully centered */}

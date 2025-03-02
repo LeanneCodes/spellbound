@@ -94,6 +94,7 @@ const AuthorCard = () => {
                                     <Button 
                                         link={`/authors/${encodeURIComponent(authorData.author)}`} 
                                         text={"Learn more"} 
+                                        className="bg-beige text-offBlack hover:bg-offBlack hover:text-beige" 
                                     />
                                 </div>
                             </div>

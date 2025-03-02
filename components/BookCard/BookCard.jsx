@@ -45,7 +45,7 @@ const BookCard = ({ showAll }) => {
               <h3 className="text-sm font-semibold">{book.title}</h3>
               <p className="text-sm text-gray-600">By: {book.author}</p>
               <div>
-                <Button link={book.amazon_product_url} text={"Buy now"} />
+                <Button link={book.amazon_product_url} text={"Buy now"} className='bg-offBlack text-beige' />
               </div>
             </div>
           </li>
