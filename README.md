@@ -34,6 +34,11 @@ The goal of this project is to showcase my skills in **React, Next.js, API integ
 - **LocalStorage** (Storing bestseller updates to compare with previous data)
 
 ---
+## 🎨 Design
+
+The design was mostly inspired by Nick Buturishvili. A link to the original design is [here](https://dribbble.com/shots/20816339-Book-Web-Store).
+
+---
 
 ## 🛠️ Installation & Setup
 To run this project locally, follow these steps:
