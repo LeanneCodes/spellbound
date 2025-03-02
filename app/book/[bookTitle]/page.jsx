@@ -11,7 +11,7 @@ const BookPage = () => {
   const params = useParams();
   console.log("Params from useParams:", params); // Debugging
   const rawbookTitle = params.bookTitle; // Get from URL
-  console.log(rawbookTitle)
+  console.log(rawbookTitle);
   if (!rawbookTitle) {
     console.error("No bookTitle parameter found in URL");
   }
@@ -92,6 +92,7 @@ const BookPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
+      {/* Main Book Info Section */}
       <div className="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-lg flex flex-col md:flex-row gap-6">
         {book?.book_image && (
           <div className="w-48 h-72 flex-shrink-0">
@@ -140,7 +141,7 @@ const BookPage = () => {
         </div>
       </div>
 
-      {/* Add the RelevantBooks component here */}
+      {/* Relevant Books Component Section */}
       <RelevantBooks books={relevantBooks} />
     </div>
   );
