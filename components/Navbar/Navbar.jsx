@@ -8,10 +8,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Authors", href: "/authors" },
-];
+const navigation = [{ name: "Home", href: "/" }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -19,50 +16,44 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [categories, setCategories] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const [filteredAuthors, setFilteredAuthors] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [hasUpdate, setHasUpdate] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch("/api/nyt");
         const data = await response.json();
 
         if (data?.results?.lists) {
-          const categoryNames = data.results.lists.map(list => list.list_name);
+          const categoryNames = data.results.lists.map((list) => list.list_name);
           setCategories(categoryNames);
+
+          const uniqueAuthors = Array.from(
+            new Set(data.results.lists.flatMap((list) => list.books.map((book) => book.author)))
+          );
+          setAuthors(uniqueAuthors);
+          setFilteredAuthors(uniqueAuthors);
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchBestsellers = async () => {
-      try {
-        const response = await fetch("/api/nyt");
-        const data = await response.json();
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
 
-        if (!data?.results?.lists) return;
-
-        const newList = data.results.lists.flatMap(list => list.books.map(book => book.title));
-        const storedList = JSON.parse(localStorage.getItem("bestsellers")) || [];
-
-        if (JSON.stringify(storedList) !== JSON.stringify(newList)) {
-          setHasUpdate(true);
-          localStorage.setItem("bestsellers", JSON.stringify(newList));
-        }
-      } catch (error) {
-        console.error("Error fetching bestsellers:", error);
-      }
-    };
-
-    fetchBestsellers();
-  }, []);
+    const filtered = authors.filter((author) => author.toLowerCase().includes(query));
+    setFilteredAuthors(filtered);
+  };
 
   const handleNotificationClick = () => {
     if (hasUpdate) {
@@ -117,6 +108,42 @@ export default function Navbar() {
                     ) : (
                       <MenuItem>
                         <span className="block px-4 py-2 text-sm text-gray-500">Loading...</span>
+                      </MenuItem>
+                    )}
+                  </MenuItems>
+                </Menu>
+
+                {/* Authors Dropdown */}
+                <Menu as="div" className="relative">
+                  <MenuButton className="font-normal hover:font-extrabold rounded-md px-3 py-2 text-md text-offBlack">
+                    Authors
+                  </MenuButton>
+                  <MenuItems className="absolute z-10 mt-2 w-60 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 max-h-80 overflow-auto">
+                    {authors.length > 12 && (
+                      <div className="px-3 py-2">
+                        <input
+                          type="text"
+                          placeholder="Search authors..."
+                          value={searchQuery}
+                          onChange={handleSearch}
+                          className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                        />
+                      </div>
+                    )}
+                    {filteredAuthors.length > 0 ? (
+                      filteredAuthors.map((author, index) => (
+                        <MenuItem key={index}>
+                          <button
+                            onClick={() => router.push(`/author/${encodeURIComponent(author)}`)}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {author}
+                          </button>
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem>
+                        <span className="block px-4 py-2 text-sm text-gray-500">No authors found</span>
                       </MenuItem>
                     )}
                   </MenuItems>
