@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📚 NYT Bestsellers Web App
 
-## Getting Started
+## 📝 Project Overview
+This project is a **Next.js** web application that fetches and displays the latest **New York Times Bestsellers**. It includes an interactive navigation bar with dropdowns for **Authors** and **Categories**, allowing users to browse books efficiently. The app dynamically updates its content based on API data and includes real-time notifications when bestseller lists change.
 
-First, run the development server:
+The goal of this project is to showcase my skills in **React, Next.js, API integration, UI/UX design, and dynamic content rendering**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Features
+- 📖 **Bestsellers List:** Displays the latest NYT Bestsellers dynamically.
+- 🔍 **Categories Dropdown:** Browse books by category.
+- 🖊️ **Authors Dropdown with Search:** If more than 12 authors exist, a search bar appears for easy navigation.
+- 🔔 **Real-Time Notifications:** Alerts users when bestsellers update.
+- 🌐 **Responsive UI:** Fully optimised for desktop and mobile devices.
+- ⚡ **Fast Performance:** Utilises server-side rendering (SSR) and client-side fetching for optimal speed.
+
+---
+
+## 🏗️ Tech Stack
+### **Frontend:**
+- **Next.js** (React framework for performance and SEO)
+- **Tailwind CSS** (Utility-first styling for responsive design)
+- **Headless UI** (For accessible and interactive UI components)
+- **Heroicons** (SVG icons for UI elements)
+
+### **Backend & API:**
+- **New York Times API** (Fetching bestsellers and author data)
+- **Next.js API Routes** (Server-side fetching and data handling)
+
+### **State Management & Utilities:**
+- **useState & useEffect** (React hooks for state handling)
+- **React Hot Toast** (For smooth notification pop-ups)
+- **LocalStorage** (Storing bestseller updates to compare with previous data)
+
+---
+
+## 🛠️ Installation & Setup
+To run this project locally, follow these steps:
+
+### 1️⃣ Clone the repository:
+```sh
+git clone https://github.com/your-username/nyt-bestsellers-app.git
+cd nyt-bestsellers-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Install dependencies:
+```sh
+npm install  # or yarn install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 3️⃣ Set up environment variables:
+Create a `.env.local` file in the root directory and add:
+```sh
+NEXT_PUBLIC_NYT_API_KEY=your_api_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4️⃣ Start the development server:
+```sh
+npm run dev  # or yarn dev
+```
 
-## Learn More
+The app will be available at **http://localhost:3000**.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📂 Project Structure
+```plaintext
+├── components/       # Reusable UI components (Navbar, Dropdowns, etc.)
+├── pages/            # Next.js pages (Home, Authors, Categories)
+├── api/nyt.js        # API call to fetch NYT data
+├── public/           # Static assets (logos, icons, etc.)
+├── styles/           # Global and component styles (Tailwind)
+├── .env.local        # API key (excluded from Git)
+├── README.md         # Project documentation
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🏆 Why This Project Stands Out
+This project showcases **frontend expertise** in **React, Next.js, UI development, and API integration**, demonstrating:
+- **Strong state management and performance optimisation**
+- **Intuitive and responsive UI with dynamic dropdowns**
+- **Best practices in modern web development**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+It serves as an excellent example of **real-world problem-solving**, perfect for roles in **frontend engineering, React development, and UI/UX-focused positions**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📬 Contact
+Looking for a skilled **Frontend Developer**? Let's connect!
+- 💼 [Portfolio](https://frontend-portfolio-five-dun.vercel.app/)
+- 📧 Email: leannemgoldsmith@gmail.com
+- 🐙 GitHub: [LeanneCodes](https://github.com/LeanneCodes)
+- 💬 LinkedIn: [Leanne Goldsmith](https://www.linkedin.com/in/leanne-m-goldsmith/)
+
+---
+
+⭐ **If you find this project useful, consider giving it a star on GitHub!** ⭐
+
