@@ -3,13 +3,12 @@ import React from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const navigation = [
   { name: 'Home', href: '#', current: true },
-  { name: 'Bestsellers', href: '#', current: false },
   { name: 'Categories', href: '#', current: false },
   { name: 'Authors', href: '#', current: false },
-  { name: 'About Us', href: '#', current: false },
 ]
 
 function classNames(...classes) {
@@ -20,7 +19,7 @@ export default function Navbar() {
   return (
     <Disclosure as="nav" className="bg-beige">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
+        <div className="relative flex h-18 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* Mobile menu button*/}
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
@@ -30,17 +29,19 @@ export default function Navbar() {
               <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
             </DisclosureButton>
           </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start h-full">
             <div className="flex shrink-0 items-center">
-              <Image
-                src={'/spellbound-logo.png'}
-                alt='logo'
-                width={150}
-                height={36}
-                priority
-              />
+              <Link href="/">
+                <Image
+                  src={'/spellbound-logo2.png'}
+                  alt='logo'
+                  width={250}
+                  height={150}
+                  priority
+                />
+              </Link>
             </div>
-            <div className="hidden sm:ml-6 sm:block">
+            <div className="hidden sm:ml-6 sm:flex items-center h-18 justify-center">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
                   <a
@@ -76,7 +77,7 @@ export default function Navbar() {
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src="/leanne-img.png"
                     className="size-8 rounded-full"
                   />
                 </MenuButton>
@@ -124,7 +125,7 @@ export default function Navbar() {
               href={item.href}
               aria-current={item.current ? 'page' : undefined}
               className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                item.current ? 'font-semibold' : 'text-offBlack hover:font-semibold',
                 'block rounded-md px-3 py-2 text-base font-medium',
               )}
             >

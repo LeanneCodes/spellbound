@@ -58,7 +58,7 @@ const Hero = () => {
             </div>
 
             {/* Pagination Indicator Outside */}
-        <div className="swiper-pagination swiper-pagination-vertical !absolute transform -translate-y-1/2 h-1/2" style={{ "--swiper-pagination-color": "#0d0c22" }}></div>
+        <div className="hidden md:block swiper-pagination swiper-pagination-vertical !absolute transform -translate-y-1/2 h-1/2" style={{ "--swiper-pagination-color": "#0d0c22" }}></div>
         </div>
       </div>
     );
