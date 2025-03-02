@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { ShoppingCart, Store, BookOpen } from "lucide-react";
 import Link from "next/link";
+import RelevantBooks from "@/components/RelevantBooks/RelevantBooks";
 
 const BookPage = () => {
   const params = useParams();
@@ -25,6 +26,7 @@ const BookPage = () => {
   console.log("Formatted Book Name:", formattedbookTitle); // Debugging
 
   const [book, setBook] = useState(null);
+  const [relevantBooks, setRelevantBooks] = useState([]); // State for relevant books
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +53,22 @@ const BookPage = () => {
           if (!matchedBook) console.warn("No book found for:", formattedbookTitle);
 
           setBook(matchedBook || null);
+
+          // Fetch relevant books (by same author or same category)
+          const relevantBooksByAuthor = allBooks.filter(
+            (b) => b.author === matchedBook?.author && b.title !== matchedBook?.title
+          );
+          
+          const relevantBooksByCategory = allBooks.filter(
+            (b) => b?.category === matchedBook?.category && b.title !== matchedBook?.title
+          );
+          
+          const combinedRelevantBooks = [
+            ...relevantBooksByAuthor,
+            ...relevantBooksByCategory
+          ].slice(0, 6); // Limit to 6 books
+          
+          setRelevantBooks(combinedRelevantBooks);
         }
       } catch (error) {
         console.error("Error fetching book details:", error);
@@ -119,14 +137,11 @@ const BookPage = () => {
               </a>
             ))}
           </div>
-
-          <Link href="/books">
-            <button className="mt-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-900 transition">
-              ← Back to Bestsellers
-            </button>
-          </Link>
         </div>
       </div>
+
+      {/* Add the RelevantBooks component here */}
+      <RelevantBooks books={relevantBooks} />
     </div>
   );
 };
