@@ -5,6 +5,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { IoSearch } from "react-icons/io5";
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -176,13 +177,21 @@ export default function Navbar() {
                     </div>
                     
                     <div className="relative w-64">
+
+                    <div className="relative w-64">
+                      {/* Search Icon */}
+                      <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-offBlack text-sm" />
+
+                      {/* Search Input */}
                       <input
                         type="text"
                         value={bookSearchQuery}
                         onChange={handleBookSearch}
                         placeholder="Search books..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+                        className="w-full pl-10 px-3 py-2 text-sm placeholder-offBlack border-b-[1px] border-grey bg-transparent focus:outline-none focus:ring-0"
                       />
+                    </div>
+
                       {bookSearchQuery && (
                         <div className="absolute bg-white w-full mt-1 border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto z-50">
                           {filteredBooks.length > 0 ? (
