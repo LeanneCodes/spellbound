@@ -18,29 +18,37 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [categories, setCategories] = useState([]);
-  const [authors, setAuthors] = useState(["J.K. Rowling", "Stephen King", "Agatha Christie", "George Orwell"]);
+  const [authors, setAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null); // Tracks which dropdown is open in mobile view
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
         const response = await fetch("/api/nyt");
         const data = await response.json();
 
         if (data?.results?.lists) {
+          // Extract categories
           const categoryNames = data.results.lists.map((list) => list.list_name);
           setCategories(categoryNames);
+
+          // Extract unique authors
+          const uniqueAuthors = Array.from(
+            new Set(data.results.lists.flatMap((list) => list.books.map((book) => book.author)))
+          );
+          setAuthors(uniqueAuthors);
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching data:", error);
         setCategories([]);
+        setAuthors([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
 
   return (
@@ -91,11 +99,17 @@ export default function Navbar() {
                               )
                             )}
                             {item.name === "Authors" && (
-                              authors.map((author, index) => (
-                                <MenuItem key={index} as="a" href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                  {author}
-                                </MenuItem>
-                              ))
+                              loading ? (
+                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
+                              ) : authors.length === 0 ? (
+                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">No authors available</MenuItem>
+                              ) : (
+                                authors.map((author, index) => (
+                                  <MenuItem key={index} as="a" href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                    {author}
+                                  </MenuItem>
+                                ))
+                              )
                             )}
                           </MenuItems>
                         </Menu>
@@ -146,11 +160,17 @@ export default function Navbar() {
                           )
                         )}
                         {item.name === "Authors" && (
-                          authors.map((author, index) => (
-                            <Link key={index} href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                              {author}
-                            </Link>
-                          ))
+                          loading ? (
+                            <div className="px-4 py-2 text-gray-500">Loading...</div>
+                          ) : authors.length === 0 ? (
+                            <div className="px-4 py-2 text-gray-500">No authors available</div>
+                          ) : (
+                            authors.map((author, index) => (
+                              <Link key={index} href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                {author}
+                              </Link>
+                            ))
+                          )
                         )}
                       </div>
                     )}
