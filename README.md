@@ -27,6 +27,7 @@ The goal of this project is to showcase my skills in **React, Next.js, API integ
 ### **Backend & API:**
 - **New York Times API** (Fetching bestsellers and author data)
 - **Next.js API Routes** (Server-side fetching and data handling)
+- **OpenLibrary API** (Author Stats)
 
 ### **State Management & Utilities:**
 - **useState & useEffect** (React hooks for state handling)
@@ -36,7 +37,9 @@ The goal of this project is to showcase my skills in **React, Next.js, API integ
 ---
 ## 🎨 Design
 
-The design was mostly inspired by Nick Buturishvili. A link to the original design is [here](https://dribbble.com/shots/20816339-Book-Web-Store).
+The design was mostly inspired by, The New York Times, Waterstones and Nick Buturishvili.
+
+A link to the original design is [here](https://dribbble.com/shots/20816339-Book-Web-Store).
 
 ---
 
