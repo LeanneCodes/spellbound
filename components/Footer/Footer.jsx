@@ -8,7 +8,7 @@ const Footer = () => {
         {/* Logo */}
         <Link href="/">
           <Image
-            src="/spellbound-logo2.png" // Update with your actual logo path
+            src="/spellbound-logo-full.png" // Update with your actual logo path
             alt="Spellbound Logo"
             width={300} // Adjust size as needed
             height={200}
