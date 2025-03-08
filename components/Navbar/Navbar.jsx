@@ -1,11 +1,13 @@
 "use client";
 
+import NotificationBell from '@/lib/notification';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { IoSearch } from "react-icons/io5";
+import { VscBell, VscBellDot } from "react-icons/vsc";
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -176,6 +178,7 @@ export default function Navbar() {
                       ))}
                     </div>
                     
+                    {/* Search bar */}
                     <div className="relative w-64">
 
                       <div className="relative w-64">
@@ -211,6 +214,9 @@ export default function Navbar() {
                         </div>
                       )}
                     </div>
+
+                    {/* Notification Bell */}
+                    <NotificationBell />
                   </div>
                   
 
