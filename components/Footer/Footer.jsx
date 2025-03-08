@@ -12,7 +12,6 @@ const Footer = () => {
             alt="Spellbound Logo"
             width={300} // Adjust size as needed
             height={200}
-            priority
           />
         </Link>
 

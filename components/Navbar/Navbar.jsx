@@ -71,7 +71,7 @@ export default function Navbar() {
     <Disclosure as="nav" className="bg-beige">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto container px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               {/* Mobile Menu Button */}
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -91,7 +91,6 @@ export default function Navbar() {
                     alt='logo'
                     width={100}
                     height={100}
-                    priority
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
