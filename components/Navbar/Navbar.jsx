@@ -19,6 +19,9 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [bookSearchQuery, setBookSearchQuery] = useState("");
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [allBooks, setAllBooks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +36,10 @@ export default function Navbar() {
           const uniqueAuthors = Array.from(
             new Set(data.results.lists.flatMap((list) => list.books.map((book) => book.author)))
           );
+
+          const books = data.results.lists.flatMap((list) => list.books.map((book) => book.title));
+          setAllBooks(Array.from(new Set(books))); // Ensure unique book titles
+
           setAuthors(uniqueAuthors);
           setFilteredAuthors(uniqueAuthors);
         }
@@ -60,6 +67,19 @@ export default function Navbar() {
     setFilteredAuthors(filtered);
   };
 
+  // Filter book search
+  const handleBookSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setBookSearchQuery(query);
+  
+    if (query) {
+      setFilteredBooks(allBooks.filter((book) => book.toLowerCase().includes(query)));
+    } else {
+      setFilteredBooks([]);
+    }
+  };
+  
+
   // Function to reset navbar after selecting an option
   const resetNavbar = () => {
     setBookSearchQuery(""); // Clear book search
@@ -84,73 +104,107 @@ export default function Navbar() {
                   )}
                 </DisclosureButton>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="flex flex-1 items-center justify-center sm:justify-between">
                 <div className="flex shrink-0 items-center">
-                  <Image
-                    src={'/spellbound-logo-short.png'}
-                    alt='logo'
-                    width={100}
-                    height={100}
-                  />
+                  <Link href={"/"}>
+                    <Image
+                      src={'/spellbound-logo-short.png'}
+                      alt='logo'
+                      width={100}
+                      height={100}
+                    />
+                  </Link>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-4 h-full justify-center items-center">
-                    {navigation.map((item) => (
-                      item.dropdown ? (
-                        <Menu as="div" className="relative" key={item.name}>
-                          <MenuButton 
-                            className="text-offBlack hover:font-bold rounded-md px-3 py-2 text-sm font-medium">
+                  <div className="flex space-x-4 h-full justify-between w-full items-center">
+                    <div className='flex'>
+                      {navigation.map((item) => (
+                        item.dropdown ? (
+                          <Menu as="div" className="relative" key={item.name}>
+                            <MenuButton 
+                              className="text-offBlack hover:font-bold rounded-md px-3 py-2 text-sm font-medium">
+                              {item.name}
+                            </MenuButton>
+                            <MenuItems className="absolute right-0 mt-2 w-64 bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-80 overflow-y-auto z-50">
+                              {item.name === "Categories" && (
+                                <>
+                                  {loading ? (
+                                    <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
+                                  ) : categories.length === 0 ? (
+                                    <MenuItem as="div" className="block px-4 py-2 text-gray-500">No categories found</MenuItem>
+                                  ) : (
+                                    categories.map((category, index) => (
+                                      <MenuItem key={index} as="a" href={`/category/${encodeURIComponent(category)}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        {category}
+                                      </MenuItem>
+                                    ))
+                                  )}
+                                </>
+                              )}
+                              {item.name === "Authors" && (
+                                <>
+                                  <div className="p-2">
+                                    <input
+                                      type="text"
+                                      value={searchQuery}
+                                      onChange={handleSearch}
+                                      placeholder="Search authors..."
+                                      className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+                                    />
+                                  </div>
+                                  {loading ? (
+                                    <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
+                                  ) : filteredAuthors.length === 0 ? (
+                                    <MenuItem as="div" className="block px-4 py-2 text-gray-500">No authors found</MenuItem>
+                                  ) : (
+                                    filteredAuthors.map((author, index) => (
+                                      <MenuItem key={index} as="a" href={`/author/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        {author}
+                                      </MenuItem>
+                                    ))
+                                  )}
+                                </>
+                              )}
+                            </MenuItems>
+                          </Menu>
+                        ) : (
+                          <Link key={item.name} href={item.href} className="text-offBlack font-bold rounded-md px-3 py-2 text-sm" onClick={resetNavbar}>
                             {item.name}
-                          </MenuButton>
-                          <MenuItems className="absolute right-0 mt-2 w-64 bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-80 overflow-y-auto z-50">
-                            {item.name === "Categories" && (
-                              <>
-                                {loading ? (
-                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
-                                ) : categories.length === 0 ? (
-                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">No categories found</MenuItem>
-                                ) : (
-                                  categories.map((category, index) => (
-                                    <MenuItem key={index} as="a" href={`/category/${encodeURIComponent(category)}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                      {category}
-                                    </MenuItem>
-                                  ))
-                                )}
-                              </>
-                            )}
-                            {item.name === "Authors" && (
-                              <>
-                                <div className="p-2">
-                                  <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={handleSearch}
-                                    placeholder="Search authors..."
-                                    className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
-                                  />
-                                </div>
-                                {loading ? (
-                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
-                                ) : filteredAuthors.length === 0 ? (
-                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">No authors found</MenuItem>
-                                ) : (
-                                  filteredAuthors.map((author, index) => (
-                                    <MenuItem key={index} as="a" href={`/author/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                      {author}
-                                    </MenuItem>
-                                  ))
-                                )}
-                              </>
-                            )}
-                          </MenuItems>
-                        </Menu>
-                      ) : (
-                        <Link key={item.name} href={item.href} className="text-offBlack font-bold rounded-md px-3 py-2 text-sm" onClick={resetNavbar}>
-                          {item.name}
-                        </Link>
-                      )
-                    ))}
+                          </Link>
+                        )
+                      ))}
+                    </div>
+                    
+                    <div className="relative w-64">
+                      <input
+                        type="text"
+                        value={bookSearchQuery}
+                        onChange={handleBookSearch}
+                        placeholder="Search books..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+                      />
+                      {bookSearchQuery && (
+                        <div className="absolute bg-white w-full mt-1 border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto z-50">
+                          {filteredBooks.length > 0 ? (
+                            filteredBooks.map((book, index) => (
+                              <Link 
+                                key={index} 
+                                href={`/book/${book.replace(/\s+/g, '-').toLowerCase()}`} 
+                                className="block px-3 py-2 text-gray-700 hover:bg-gray-100"
+                                onClick={resetNavbar}
+                              >
+                                {book}
+                              </Link>
+                            ))
+                          ) : (
+                            <div className="px-3 py-2 text-gray-500">No results found</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
+                  
+
                 </div>
               </div>
             </div>
