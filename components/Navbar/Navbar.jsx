@@ -178,19 +178,19 @@ export default function Navbar() {
                     
                     <div className="relative w-64">
 
-                    <div className="relative w-64">
-                      {/* Search Icon */}
-                      <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-offBlack text-sm" />
+                      <div className="relative w-64">
+                        {/* Search Icon */}
+                        <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-offBlack text-sm" />
 
-                      {/* Search Input */}
-                      <input
-                        type="text"
-                        value={bookSearchQuery}
-                        onChange={handleBookSearch}
-                        placeholder="Search books..."
-                        className="w-full pl-10 px-3 py-2 text-sm placeholder-offBlack border-b-[1px] border-grey bg-transparent focus:outline-none focus:ring-0"
-                      />
-                    </div>
+                        {/* Search Input */}
+                        <input
+                          type="text"
+                          value={bookSearchQuery}
+                          onChange={handleBookSearch}
+                          placeholder="Search books..."
+                          className="w-full pl-10 px-3 py-2 text-sm placeholder-offBlack border-b-[1px] border-grey bg-transparent focus:outline-none focus:ring-0"
+                        />
+                      </div>
 
                       {bookSearchQuery && (
                         <div className="absolute bg-white w-full mt-1 border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto z-50">
@@ -295,6 +295,43 @@ export default function Navbar() {
                           {author}
                         </Link>
                       ))
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Search */}
+              <div className="relative w-full">
+
+                <div className="relative w-full">
+                  {/* Search Icon */}
+                  <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-offBlack text-sm" />
+
+                  {/* Search Input */}
+                  <input
+                    type="text"
+                    value={bookSearchQuery}
+                    onChange={handleBookSearch}
+                    placeholder="Search books..."
+                    className="w-full pl-10 px-3 py-2 text-sm placeholder-offBlack border-b-[1px] border-grey bg-transparent focus:outline-none focus:ring-0"
+                  />
+                </div>
+
+                {bookSearchQuery && (
+                  <div className="absolute bg-white w-full mt-1 border border-gray-300 rounded-md shadow-md max-h-48 overflow-y-auto z-50">
+                    {filteredBooks.length > 0 ? (
+                      filteredBooks.map((book, index) => (
+                        <Link 
+                          key={index} 
+                          href={`/book/${book.replace(/\s+/g, '-').toLowerCase()}`} 
+                          className="block px-3 py-2 text-gray-700 hover:bg-gray-100"
+                          onClick={resetNavbar}
+                        >
+                          {book}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-3 py-2 text-gray-500">No results found</div>
                     )}
                   </div>
                 )}
