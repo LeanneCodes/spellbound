@@ -13,6 +13,7 @@ export default {
         beige: "#faf8f6",
         offBlack: "#0d0c22",
         navy: "#0c1220",
+        grey: "#999999",
       },
       fontFamily: {
         newsreader: ["Newsreader", "serif"], // Custom font

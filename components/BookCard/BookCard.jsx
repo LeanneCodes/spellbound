@@ -28,25 +28,46 @@ const BookCard = ({ showAll }) => {
 
   return (
     <div className="w-full mt-5">
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
-        {visibleBooks.map((book) => (
-          <li key={book.primary_isbn13} className="flex flex-col h-full">
-            <div className="w-full h-[350px] overflow-hidden">
-              {book.book_image && (
-                <Image
-                  src={book.book_image}
-                  width={150}
-                  height={250}
-                  alt={book.title}
-                  className="w-full h-full object-cover"
-                  priority
-                />
-              )}
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        {visibleBooks.map((book, index) => (
+          <li
+            key={book.primary_isbn13}
+            className="flex flex-col h-full pr-8"
+            style={{
+              borderRight: (index + 1) % 6 !== 0 ? "1px solid #D1D5DB" : "none", // No right border on last item in each row
+            }}
+          >
+            <div className="flex justify-center items-start gap-4">
+              <div>
+                <span className="text-4xl font-medium text-grey">{index + 1}</span>
+              </div>
+              <div className="w-full overflow-hidden">
+                {book.book_image && (
+                  <Image
+                    src={book.book_image}
+                    width={100}
+                    height={250}
+                    alt={book.title}
+                    className="w-full h-full object-cover"
+                    priority
+                  />
+                )}
+              </div>
             </div>
 
-            <div className="flex flex-col justify-between flex-grow mt-4 text-left space-y-1">
-              <h3 className="text-sm font-semibold">{book.title}</h3>
-              <p className="text-sm text-gray-600">By: {book.author}</p>
+            <div className="flex flex-col justify-end flex-grow mt-4 text-left">
+              {book.weeks_on_list > 1 && (
+                <p className="text-gray-600 text-[12px] uppercase">
+                  {book.weeks_on_list} weeks on the list
+                </p>
+              )}
+              {book.weeks_on_list == 1 && (
+                <p className="text-gray-600 text-[12px] uppercase">
+                  New this week
+                </p>
+              )}
+              <h3 className="text-[16px] font-semibold">{book.title}</h3>
+              <p className="text-sm text-gray-600 mb-3">By: {book.author}</p>
 
               <div>
                 <Button onClick={() => setSelectedBook(book)} text={"More details"} className="bg-offBlack text-beige hover:bg-beige hover:text-offBlack" />
@@ -55,6 +76,7 @@ const BookCard = ({ showAll }) => {
           </li>
         ))}
       </ul>
+
 
       {/* Full-Screen Modal */}
       {selectedBook && (

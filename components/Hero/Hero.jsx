@@ -49,7 +49,7 @@ const Hero = () => {
       <div className="bg-beige w-full h-[500px]">
         <div className="flex flex-col md:flex-row h-[500px] justify-around items-center container mx-auto">
             <div className="space-y-4 w-full p-10">
-                <h1 className="text-5xl md:text-8xl font-semibold">
+                <h1 className="text-5xl lg:text-8xl font-semibold">
                     Find Your<br />Next Book
                 </h1>
                 <p className="text-lg md:text-2xl">
