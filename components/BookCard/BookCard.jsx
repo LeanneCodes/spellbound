@@ -5,6 +5,7 @@ import useBookData from "@/hooks/useBookData";
 import Image from "next/image";
 import Button from "../Button/Button";
 import { ShoppingCart, Store, BookOpen } from "lucide-react";
+import Link from "next/link";
 
 const BookCard = ({ showAll }) => {
   const { lists, loading, error } = useBookData();
@@ -27,8 +28,8 @@ const BookCard = ({ showAll }) => {
   };
 
   return (
-    <div className="w-full mt-5">
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+    <div className="w-full mt-5 border-y-2 py-10">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-16">
         {visibleBooks.map((book, index) => (
           <li
             key={book.primary_isbn13}
@@ -107,8 +108,12 @@ const BookCard = ({ showAll }) => {
 
               {/* Book Details */}
               <div className="flex-1 space-y-4">
-                <h3 className="text-2xl font-bold">{selectedBook.title}</h3>
-                <p className="text-lg text-gray-700">By: {selectedBook.author}</p>
+                <Link href={`/book/${encodeURIComponent(selectedBook.title)}`}>
+                  <h3 className="text-2xl font-bold underline">{selectedBook.title}</h3>
+                </Link>
+                <Link href={`/author/${encodeURIComponent(selectedBook.author)}`}>
+                <p className="text-lg text-gray-700">By: <span className="underline">{selectedBook.author}</span></p>
+                </Link>
                 
                 {/* Weeks on List */}
                 {selectedBook.weeks_on_list > 0 && (

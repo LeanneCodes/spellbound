@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/components/Button/Button";
+import Link from "next/link";
 
 const AuthorCard = () => {
     const [authors, setAuthors] = useState([]);
@@ -58,55 +59,48 @@ const AuthorCard = () => {
     if (error) return <p className="text-center text-red-500">Error! Unable to load authors at this moment.</p>;
 
     return (
-        <div className="w-full mt-5">
-            <ul key={authors.length} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {authors.map((authorData, index) => {
-                    const authorBooks = books?.length > 0 
-                      ? books.filter(book => book.author === authorData.author) 
-                      : [];
-                    const bookCover = authorBooks.length > 0 ? authorBooks[0].book_image : null;
-
-                    return (
-                        <li 
-                            key={index} 
-                            className="flex items-center gap-4 p-6 bg-offBlack rounded-xl shadow-lg border border-beige/20 
-                                       hover:scale-105 hover:bg-opacity-90 transition-transform duration-300 ease-in-out"
-                        >
-                            {/* Book Cover (if available) */}
-                            {bookCover && (
-                                <div className="w-20 h-28 flex-shrink-0 rounded-lg overflow-hidden border border-beige/30">
-                                    <img 
-                                        src={bookCover} 
-                                        alt="Book cover" 
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            )}
-
-                            {/* Author Info */}
-                            <div className="flex flex-col">
-                                <h3 className="text-2xl font-extrabold text-beige leading-snug">
-                                    {authorData.author}
-                                </h3>
-                                <p className="mt-1 text-sm text-beige/80 tracking-wide">
-                                    {authorData.count} {authorData.count === 1 ? "Book" : "Books"} Charting
-                                </p>
-
-                                {/* Learn More Button */}
-                                <div className="mt-4">
-                                    <Button 
-                                        link={`/author/${encodeURIComponent(authorData.author)}`} 
-                                        text={"Learn more"} 
-                                        className="bg-beige text-offBlack hover:bg-offBlack hover:text-beige" 
-                                    />
-                                </div>
-                            </div>
-                        </li>
-                    );
-                })}
-            </ul>
+        <div className="w-full mt-5 border-y-2 py-10">
+          <ul key={authors.length} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {authors.map((authorData, index) => {
+              const authorBooks = books?.length > 0 
+                ? books.filter(book => book.author === authorData.author) 
+                : [];
+              const bookCover = authorBooks.length > 0 ? authorBooks[0].book_image : null;
+      
+              return (
+                <li 
+                  key={index} 
+                  className="flex items-center bg-white overflow-hidden"
+                >
+                  {/* Image Container */}
+                  {bookCover && (
+                    <div className="w-28 h-36 flex-shrink-0 rounded-t-full overflow-hidden">
+                      <img 
+                        src={bookCover} 
+                        alt="Book cover" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+      
+                  {/* Author Info */}
+                  <div className="flex flex-col justify-center px-6 py-4 flex-grow bg-white text-offBlack">
+                    <Link href={`/author/${encodeURIComponent(authorData.author)}`}>
+                        <h3 className="text-2xl font-extrabold leading-snug hover:scale-105 transition-transform duration-200 origin-left">
+                            {authorData.author}
+                        </h3>
+                    </Link>
+                    <p className="mt-1 text-sm tracking-wide">
+                      {authorData.count} {authorData.count === 1 ? "Book" : "Books"} Charting
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
     );
+      
 };
 
 export default AuthorCard;

@@ -48,36 +48,23 @@ export default function AuthorPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Author Info */}
+      {/* Author Name */}
       <div className="flex flex-col items-center text-center space-y-4 mb-8">
-        <div className="w-40 h-40 rounded-full overflow-hidden shadow-lg">
-          {authorImage && (
-            <Image
-              src={authorImage}
-              alt={decodedAuthor}
-              width={160}
-              height={160}
-              className="w-full h-full object-cover"
-              onError={() => setAuthorImage("/portrait.jpg")}
-            />
-          )}
-        </div>
         <h1 className="text-4xl font-bold text-gray-800">{decodedAuthor}</h1>
       </div>
 
-      {/* Books Grid */}
+      {/* Books List */}
       {books.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-          {books.map((book) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 py-10 border-y border-gray-300 gap-y-10">
+          {books.map((book, index) => (
             <div
               key={book.title}
-              className="flex flex-col h-full p-4 border rounded-lg shadow-lg bg-white hover:shadow-xl transition cursor-pointer"
-              onClick={() => {
-                console.log("Opening modal for:", book);
-                setSelectedBook(book);
-              }}
+              className={`flex flex-col justify-between p-4 border-r border-gray-300 bg-white ${
+                (index + 1) % 6 === 0 ? "border-r-0" : ""
+              }`}
             >
-              <div className="w-full h-[350px] overflow-hidden">
+              {/* Book Image */}
+              <div className="w-full h-[350px] overflow-hidden mb-4">
                 {book.book_image ? (
                   <Image
                     src={book.book_image}
@@ -93,18 +80,26 @@ export default function AuthorPage() {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col justify-between flex-grow mt-4 text-left space-y-1">
-                <h3 className="text-sm font-semibold">{book.title}</h3>
+
+              <div className="flex flex-col justify-end">
+                {/* Book Position & Title */}
+                <div className="flex items-center justify-start gap-x-6">
+                  {/* Position Number */}
+                  <span className="text-4xl font-medium text-gray-500">{index + 1}</span>
+
+                  {/* Book Title */}
+                  <h3 className="text-lg font-semibold">{book.title}</h3>
+                </div>
+
+                {/* "More Details" Button */}
                 <Button
-                    text="More Details"
-                    className="bg-black text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-800 transition"
-                    onClick={(e) => {
-                        e.stopPropagation(); // Prevents bubbling issues
-                        console.log("Book selected:", book); // Debugging log
-                        setSelectedBook(book); // Update state
-                    }}
+                  text="More Details"
+                  className="bg-black text-white px-4 py-2 text-sm font-semibold hover:bg-beige hover:text-offBlack transition mt-4"
+                  onClick={() => setSelectedBook(book)}
                 />
               </div>
+
+              
             </div>
           ))}
         </div>
@@ -113,11 +108,7 @@ export default function AuthorPage() {
       )}
 
       {/* Book Details Modal */}
-      {selectedBook && console.log("Modal should be open for:", selectedBook)}
-        {selectedBook && (
-            <Modal book={selectedBook} onClose={() => setSelectedBook(null)} />
-        )}
-
+      {selectedBook && <Modal book={selectedBook} onClose={() => setSelectedBook(null)} />}
     </div>
   );
 }

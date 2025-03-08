@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { ShoppingCart, Store, BookOpen } from "lucide-react";
+import Link from "next/link";
 
 const Modal = ({ book, onClose, children }) => {
   if (!book) return null; // Don't render if no book is selected
@@ -41,8 +42,13 @@ const Modal = ({ book, onClose, children }) => {
 
           {/* Book Details */}
           <div className="flex flex-col flex-grow text-left">
-            <h2 className="text-3xl font-bold">{book.title}</h2>
-            <p className="text-lg text-gray-700 mt-1">By: {book.author}</p>
+            <Link href={`/book/${encodeURIComponent(book.title)}`}>
+              <h3 className="text-2xl font-bold underline">{book.title}</h3>
+            </Link>
+            <Link href={`/author/${encodeURIComponent(book.author)}`}>
+            <p className="text-lg text-gray-700 mt-1">By: <span className="underline">{book.author}</span></p>
+            </Link>
+            
 
             {/* Weeks on List */}
             {book.weeks_on_list > 0 && (
