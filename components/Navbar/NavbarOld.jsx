@@ -62,16 +62,8 @@ export default function Navbar() {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    // Filter books based on the search query
     const filtered = books.filter((book) => book.title.toLowerCase().includes(query));
     setFilteredBooks(filtered);
-  };
-
-  const handleAuthorSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    // Filter authors based on the search query
-    const filtered = authors.filter((author) => author.toLowerCase().includes(query));
-    setFilteredAuthors(filtered);
   };
 
   const handleBookSelect = (bookTitle) => {
@@ -139,11 +131,75 @@ export default function Navbar() {
                   </MenuItems>
                 </Menu>
 
-                
+                {/* Authors Dropdown */}
+                <Menu as="div" className="relative">
+                  <MenuButton className="font-normal hover:font-extrabold rounded-md px-3 py-2 text-md text-offBlack">
+                    Authors
+                  </MenuButton>
+                  <MenuItems className="absolute z-10 mt-2 w-60 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 max-h-80 overflow-auto">
+                    {filteredAuthors.length > 12 && (
+                      <div className="px-3 py-2">
+                        <input
+                          type="text"
+                          placeholder="Search authors..."
+                          value={searchQuery}
+                          onChange={(e) => setFilteredAuthors(authors.filter((author) => author.toLowerCase().includes(e.target.value.toLowerCase())))}
+                          className="w-full p-2 border border-gray-300 rounded-md text-sm"
+                        />
+                      </div>
+                    )}
+                    {filteredAuthors.length > 0 ? (
+                      filteredAuthors.map((author, index) => (
+                        <MenuItem key={index}>
+                          <button
+                            onClick={() => router.push(`/author/${encodeURIComponent(author)}`)}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                            {author}
+                          </button>
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem>
+                        <span className="block px-4 py-2 text-sm text-gray-500">No authors found</span>
+                      </MenuItem>
+                    )}
+                  </MenuItems>
+                </Menu>
               </div>
             </div>
           </div>
 
+          {/* Search Bar & Notification Bell */}
+          <div className="flex items-center space-x-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search for books..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="p-2 w-72 border border-gray-300 rounded-md text-sm"
+              />
+              <MagnifyingGlassIcon className="absolute right-2 top-2 h-5 w-5 text-gray-500" />
+              
+              {filteredBooks.length > 0 && (
+                <div className="absolute mt-1 w-72 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 z-10 max-h-60 overflow-auto">
+                  {filteredBooks.map((book) => (
+                    <button key={book.id} onClick={() => handleBookSelect(book.title)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      {book.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Notification Bell */}
+            <button onClick={handleNotificationClick} className="relative p-1 rounded-full">
+              <BellIcon className="size-6 text-offBlack" />
+              {hasUpdate && <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />}
+            </button>
+          </div>
         </div>
       </div>
     </Disclosure>

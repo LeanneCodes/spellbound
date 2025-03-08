@@ -19,8 +19,10 @@ function classNames(...classes) {
 export default function Navbar() {
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
+  const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [openDropdown, setOpenDropdown] = useState(null); // Tracks which dropdown is open in mobile view
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,20 +31,20 @@ export default function Navbar() {
         const data = await response.json();
 
         if (data?.results?.lists) {
-          // Extract categories
           const categoryNames = data.results.lists.map((list) => list.list_name);
           setCategories(categoryNames);
 
-          // Extract unique authors
           const uniqueAuthors = Array.from(
             new Set(data.results.lists.flatMap((list) => list.books.map((book) => book.author)))
           );
           setAuthors(uniqueAuthors);
+          setFilteredAuthors(uniqueAuthors); // Initially set filtered authors to all authors
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         setCategories([]);
         setAuthors([]);
+        setFilteredAuthors([]);
       } finally {
         setLoading(false);
       }
@@ -50,6 +52,17 @@ export default function Navbar() {
 
     fetchData();
   }, []);
+
+  // Filter authors based on search input
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = authors.filter((author) =>
+      author.toLowerCase().includes(query)
+    );
+    setFilteredAuthors(filtered);
+  };
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -84,44 +97,38 @@ export default function Navbar() {
                             className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
                             {item.name}
                           </MenuButton>
-                          <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-60 overflow-y-auto">
-                            {item.name === "Categories" && (
-                              loading ? (
-                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
-                              ) : categories.length === 0 ? (
-                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">No categories available</MenuItem>
-                              ) : (
-                                categories.map((category, index) => (
-                                  <MenuItem key={index} as="a" href={`/categories/${category}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    {category}
-                                  </MenuItem>
-                                ))
-                              )
-                            )}
+                          <MenuItems className="absolute right-0 mt-2 w-64 bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-80 overflow-y-auto">
                             {item.name === "Authors" && (
-                              loading ? (
-                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
-                              ) : authors.length === 0 ? (
-                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">No authors available</MenuItem>
-                              ) : (
-                                authors.map((author, index) => (
-                                  <MenuItem key={index} as="a" href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    {author}
-                                  </MenuItem>
-                                ))
-                              )
+                              <>
+                                <div className="p-2">
+                                  <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                    placeholder="Search authors..."
+                                    className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+                                  />
+                                </div>
+                                {loading ? (
+                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
+                                ) : filteredAuthors.length === 0 ? (
+                                  <MenuItem as="div" className="block px-4 py-2 text-gray-500">No authors found</MenuItem>
+                                ) : (
+                                  filteredAuthors.map((author, index) => (
+                                    <MenuItem key={index} as="a" href={`/author/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                      {author}
+                                    </MenuItem>
+                                  ))
+                                )}
+                              </>
                             )}
                           </MenuItems>
                         </Menu>
                       ) : (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'rounded-md px-3 py-2 text-sm font-medium'
-                          )}
-                        >
+                        <Link key={item.name} href={item.href} className={classNames(
+                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          'rounded-md px-3 py-2 text-sm font-medium'
+                        )}>
                           {item.name}
                         </Link>
                       )
@@ -138,39 +145,36 @@ export default function Navbar() {
               {navigation.map((item) => (
                 item.dropdown ? (
                   <div key={item.name} className="relative">
-                    <button
-                      className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    <button className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                       onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                     >
                       {item.name}
                     </button>
                     {openDropdown === item.name && (
-                      <div className="mt-1 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-60 overflow-y-auto">
-                        {item.name === "Categories" && (
-                          loading ? (
-                            <div className="px-4 py-2 text-gray-500">Loading...</div>
-                          ) : categories.length === 0 ? (
-                            <div className="px-4 py-2 text-gray-500">No categories available</div>
-                          ) : (
-                            categories.map((category, index) => (
-                              <Link key={index} href={`/categories/${category}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                {category}
-                              </Link>
-                            ))
-                          )
-                        )}
+                      <div className="mt-1 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-80 overflow-y-auto">
                         {item.name === "Authors" && (
-                          loading ? (
-                            <div className="px-4 py-2 text-gray-500">Loading...</div>
-                          ) : authors.length === 0 ? (
-                            <div className="px-4 py-2 text-gray-500">No authors available</div>
-                          ) : (
-                            authors.map((author, index) => (
-                              <Link key={index} href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                {author}
-                              </Link>
-                            ))
-                          )
+                          <>
+                            <div className="p-2">
+                              <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearch}
+                                placeholder="Search authors..."
+                                className="w-full px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring focus:ring-indigo-500 focus:outline-none"
+                              />
+                            </div>
+                            {loading ? (
+                              <div className="px-4 py-2 text-gray-500">Loading...</div>
+                            ) : filteredAuthors.length === 0 ? (
+                              <div className="px-4 py-2 text-gray-500">No authors found</div>
+                            ) : (
+                              filteredAuthors.map((author, index) => (
+                                <Link key={index} href={`/author/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                  {author}
+                                </Link>
+                              ))
+                            )}
+                          </>
                         )}
                       </div>
                     )}

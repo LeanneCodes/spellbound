@@ -12,7 +12,9 @@ export default function AuthorPage() {
   const [books, setBooks] = useState([]);
   const [authorImage, setAuthorImage] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
-  const decodedAuthor = decodeURIComponent(author);
+  const decodedAuthor = decodeURIComponent(author).replace(/-/g, " ").trim().toLowerCase();
+
+  console.log(decodedAuthor)
 
   useEffect(() => {
     if (!decodedAuthor) return;
@@ -36,8 +38,6 @@ export default function AuthorPage() {
 
             setBooks(uniqueBooks);
 
-            // Use a dummy image for the author
-            setAuthorImage("/portrait.jpg");
         } catch (error) {
             console.error("Error fetching author's books:", error);
         }
