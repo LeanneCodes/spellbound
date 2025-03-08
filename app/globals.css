@@ -8,3 +8,7 @@ body {
   font-family: "Newsreader", serif;
   color: #0d0c22;
 }
+
+html {
+  scroll-behavior: smooth;
+}

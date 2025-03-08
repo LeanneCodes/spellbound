@@ -1,32 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { VscBell, VscBellDot } from "react-icons/vsc";
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-const navigation = [{ name: "Home", href: "/" }];
+const navigation = [
+  { name: 'Home', href: '/', current: true },
+  { name: 'Categories', href: '#', current: false, dropdown: true },
+  { name: 'Authors', href: '#', current: false, dropdown: true },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function Navbar() {
   const [categories, setCategories] = useState([]);
-  const [authors, setAuthors] = useState([]);
-  const [filteredAuthors, setFilteredAuthors] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredBooks, setFilteredBooks] = useState([]);
-  const [books, setBooks] = useState([]);
-  const [hasUpdate, setHasUpdate] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
+  const [authors, setAuthors] = useState(["J.K. Rowling", "Stephen King", "Agatha Christie", "George Orwell"]);
+  const [loading, setLoading] = useState(true);
+  const [openDropdown, setOpenDropdown] = useState(null); // Tracks which dropdown is open in mobile view
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategories = async () => {
       try {
         const response = await fetch("/api/nyt");
         const data = await response.json();
@@ -34,174 +31,140 @@ export default function Navbar() {
         if (data?.results?.lists) {
           const categoryNames = data.results.lists.map((list) => list.list_name);
           setCategories(categoryNames);
-
-          const uniqueAuthors = Array.from(
-            new Set(data.results.lists.flatMap((list) => list.books.map((book) => book.author)))
-          );
-          setAuthors(uniqueAuthors);
-          setFilteredAuthors(uniqueAuthors);
-
-          // Extract books with title and unique ID
-          const bookList = data.results.lists.flatMap((list) =>
-            list.books.map((book) => ({
-              title: book.title,
-              id: book.primary_isbn13,
-            }))
-          );
-          setBooks(bookList);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching categories:", error);
+        setCategories([]);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchData();
+    fetchCategories();
   }, []);
 
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-
-    const filtered = books.filter((book) => book.title.toLowerCase().includes(query));
-    setFilteredBooks(filtered);
-  };
-
-  const handleBookSelect = (bookTitle) => {
-    const formattedTitle = encodeURIComponent(bookTitle.replace(/\s+/g, "-").toLowerCase());
-    router.push(`/book/${formattedTitle}`);
-    setSearchQuery("");
-    setFilteredBooks([]);
-  };  
-
-  const handleNotificationClick = () => {
-    if (hasUpdate) {
-      toast.success("The bestseller list has been updated! Check it out.");
-      setHasUpdate(false);
-    }
-  };
-
   return (
-    <Disclosure as="nav" className="bg-beige">
-      <div className="mx-auto container px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-18 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
-              <span className="absolute -inset-0.5" />
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
-              <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
-            </DisclosureButton>
-          </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start h-full">
-            <div className="flex shrink-0 items-center">
-              <Link href="/">
-                <Image src={"/spellbound-logo2.png"} alt="logo" width={250} height={150} priority />
-              </Link>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex items-center h-18 justify-center">
-              <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <Link key={item.name} href={item.href} className="font-normal hover:font-extrabold rounded-md px-3 py-2 text-md text-offBlack">
-                    {item.name}
-                  </Link>
-                ))}
-
-                {/* Categories Dropdown */}
-                <Menu as="div" className="relative">
-                  <MenuButton className="font-normal hover:font-extrabold rounded-md px-3 py-2 text-md text-offBlack">
-                    Categories
-                  </MenuButton>
-                  <MenuItems className="absolute z-10 mt-2 w-48 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1">
-                    {categories.length > 0 ? (
-                      categories.map((category, index) => (
-                        <MenuItem key={index}>
-                          <button
-                            onClick={() => router.push(`/category/${encodeURIComponent(category)}`)}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            {category}
-                          </button>
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem>
-                        <span className="block px-4 py-2 text-sm text-gray-500">Loading...</span>
-                      </MenuItem>
-                    )}
-                  </MenuItems>
-                </Menu>
-
-                {/* Authors Dropdown */}
-                <Menu as="div" className="relative">
-                  <MenuButton className="font-normal hover:font-extrabold rounded-md px-3 py-2 text-md text-offBlack">
-                    Authors
-                  </MenuButton>
-                  <MenuItems className="absolute z-10 mt-2 w-60 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 max-h-80 overflow-auto">
-                    {filteredAuthors.length > 12 && (
-                      <div className="px-3 py-2">
-                        <input
-                          type="text"
-                          placeholder="Search authors..."
-                          value={searchQuery}
-                          onChange={(e) => setFilteredAuthors(authors.filter((author) => author.toLowerCase().includes(e.target.value.toLowerCase())))}
-                          className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                        />
-                      </div>
-                    )}
-                    {filteredAuthors.length > 0 ? (
-                      filteredAuthors.map((author, index) => (
-                        <MenuItem key={index}>
-                          <button
-                            onClick={() => router.push(`/author/${encodeURIComponent(author)}`)}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            {author}
-                          </button>
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem>
-                        <span className="block px-4 py-2 text-sm text-gray-500">No authors found</span>
-                      </MenuItem>
-                    )}
-                  </MenuItems>
-                </Menu>
+    <Disclosure as="nav" className="bg-gray-800">
+      {({ open }) => (
+        <>
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div className="relative flex h-16 items-center justify-between">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-none focus:ring-inset">
+                  <span className="sr-only">Open main menu</span>
+                  {open ? (
+                    <XMarkIcon className="block size-6" aria-hidden="true" />
+                  ) : (
+                    <Bars3Icon className="block size-6" aria-hidden="true" />
+                  )}
+                </DisclosureButton>
+              </div>
+              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                <div className="flex shrink-0 items-center">
+                  <img
+                    alt="Your Company"
+                    src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                    className="h-8 w-auto"
+                  />
+                </div>
+                <div className="hidden sm:ml-6 sm:block">
+                  <div className="flex space-x-4">
+                    {navigation.map((item) => (
+                      item.dropdown ? (
+                        <Menu as="div" className="relative" key={item.name}>
+                          <MenuButton 
+                            className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">
+                            {item.name}
+                          </MenuButton>
+                          <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-60 overflow-y-auto">
+                            {item.name === "Categories" && (
+                              loading ? (
+                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">Loading...</MenuItem>
+                              ) : categories.length === 0 ? (
+                                <MenuItem as="div" className="block px-4 py-2 text-gray-500">No categories available</MenuItem>
+                              ) : (
+                                categories.map((category, index) => (
+                                  <MenuItem key={index} as="a" href={`/categories/${category}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                    {category}
+                                  </MenuItem>
+                                ))
+                              )
+                            )}
+                            {item.name === "Authors" && (
+                              authors.map((author, index) => (
+                                <MenuItem key={index} as="a" href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                  {author}
+                                </MenuItem>
+                              ))
+                            )}
+                          </MenuItems>
+                        </Menu>
+                      ) : (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={classNames(
+                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'rounded-md px-3 py-2 text-sm font-medium'
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Search Bar & Notification Bell */}
-          <div className="flex items-center space-x-4">
-            {/* Search Bar */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for books..."
-                value={searchQuery}
-                onChange={handleSearch}
-                className="p-2 w-72 border border-gray-300 rounded-md text-sm"
-              />
-              <MagnifyingGlassIcon className="absolute right-2 top-2 h-5 w-5 text-gray-500" />
-              
-              {filteredBooks.length > 0 && (
-                <div className="absolute mt-1 w-72 bg-white shadow-lg ring-1 ring-black/5 rounded-md py-1 z-10 max-h-60 overflow-auto">
-                  {filteredBooks.map((book) => (
-                    <button key={book.id} onClick={() => handleBookSelect(book.title)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      {book.title}
+          {/* Mobile Navigation */}
+          <DisclosurePanel className="sm:hidden">
+            <div className="space-y-1 px-2 pt-2 pb-3">
+              {navigation.map((item) => (
+                item.dropdown ? (
+                  <div key={item.name} className="relative">
+                    <button
+                      className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                      onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                    >
+                      {item.name}
                     </button>
-                  ))}
-                </div>
-              )}
+                    {openDropdown === item.name && (
+                      <div className="mt-1 w-full bg-white shadow-lg ring-1 ring-black ring-opacity-5 max-h-60 overflow-y-auto">
+                        {item.name === "Categories" && (
+                          loading ? (
+                            <div className="px-4 py-2 text-gray-500">Loading...</div>
+                          ) : categories.length === 0 ? (
+                            <div className="px-4 py-2 text-gray-500">No categories available</div>
+                          ) : (
+                            categories.map((category, index) => (
+                              <Link key={index} href={`/categories/${category}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                {category}
+                              </Link>
+                            ))
+                          )
+                        )}
+                        {item.name === "Authors" && (
+                          authors.map((author, index) => (
+                            <Link key={index} href={`/authors/${author.replace(/\s+/g, '-').toLowerCase()}`} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                              {author}
+                            </Link>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link key={item.name} href={item.href} className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                    {item.name}
+                  </Link>
+                )
+              ))}
             </div>
-
-            {/* Notification Bell */}
-            <button onClick={handleNotificationClick} className="relative p-1 rounded-full">
-              <BellIcon className="size-6 text-offBlack" />
-              {hasUpdate && <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />}
-            </button>
-          </div>
-        </div>
-      </div>
+          </DisclosurePanel>
+        </>
+      )}
     </Disclosure>
   );
 }

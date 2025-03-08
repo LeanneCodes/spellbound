@@ -7,7 +7,7 @@ const Bestsellers = () => {
   const [showAll, setShowAll] = useState(false);
 
   return (
-    <div className="container mx-auto mb-20 px-10">
+    <div className="container mx-auto mb-20 px-10" id='bestsellers'>
       <div className="flex w-full justify-between mt-20">
         <h2 className="text-3xl font-semibold">Top 18 Bestsellers</h2>
         <button 

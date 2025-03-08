@@ -56,7 +56,7 @@ const Hero = () => {
                     Showcasing the trending books and authors at <span className="font-semibold">Spellbound</span>.<br />Let us help you find your next read.
                 </p>
                 <div>
-                    <Button link={"/books"} text={"Explore now"} className="bg-offBlack text-beige" />
+                    <Button link="#bestsellers" text={"Explore now"} className="bg-offBlack text-beige" />
                 </div>
             </div>
             {/* Ensure the Carousel is fully centered */}
