@@ -118,6 +118,7 @@ export default function Navbar() {
                     />
                   </Link>
                 </div>
+
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4 h-full justify-between w-full items-center">
                     <div className='flex'>
@@ -228,6 +229,9 @@ export default function Navbar() {
           {/* Mobile Navigation (Restored) */}
           <DisclosurePanel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
+              {/* Notification Bell */}
+              <NotificationBell />
+              
               {/* Home Link */}
               <Link
                 href="/"
