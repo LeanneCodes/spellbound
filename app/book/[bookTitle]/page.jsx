@@ -157,7 +157,7 @@ const BookPage = () => {
               <div
                 className={`flex flex-col p-4 bg-white ${index !== relevantBooks.length - 1 ? '' : ''} transition-transform transform hover:scale-105`}
               >
-                <div className="w-full h-[350px] overflow-hidden">
+                <div className="w-full h-full overflow-hidden">
                   {relevantBook.book_image ? (
                     <Image
                       src={relevantBook.book_image}
