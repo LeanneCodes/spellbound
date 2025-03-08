@@ -29,7 +29,7 @@ const BookCard = ({ showAll }) => {
 
   return (
     <div className="w-full mt-5 border-y-2 py-10">
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-16">
+      <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-16">
         {visibleBooks.map((book, index) => (
           <li
             key={book.primary_isbn13}
@@ -81,81 +81,77 @@ const BookCard = ({ showAll }) => {
 
       {/* Full-Screen Modal */}
       {selectedBook && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
-          <div className="bg-white w-full max-w-3xl p-8 rounded-lg shadow-lg relative">
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedBook(null)}
-              className="absolute top-4 right-4 text-gray-600 hover:text-black text-2xl"
-            >
-              ✖
-            </button>
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-8 rounded-2xl shadow-xl max-w-5xl w-full relative">
+      {/* Close Button */}
+      <button
+        onClick={() => setSelectedBook(null)}
+        className="absolute top-5 right-5 text-gray-600 hover:text-black text-3xl font-bold"
+      >
+        &times;
+      </button>
 
-            {/* Modal Content */}
-            <div className="flex flex-col md:flex-row gap-6">
-              {/* Book Image */}
-              {selectedBook.book_image && (
-                <div className="flex-shrink-0 w-full md:w-1/3">
-                  <Image
-                    src={selectedBook.book_image}
-                    alt={selectedBook.title}
-                    width={200}
-                    height={300}
-                    className="rounded-md shadow-md w-full"
-                  />
-                </div>
-              )}
+      {/* Modal Content */}
+      <div className="flex flex-col md:flex-row items-center gap-6">
+        {/* Book Image */}
+        {selectedBook.book_image && (
+          <div className="w-48 h-72 flex-shrink-0">
+            <Image
+              src={selectedBook.book_image}
+              alt={selectedBook.title}
+              width={200}
+              height={300}
+              className="w-full h-full object-cover rounded-lg shadow-lg"
+            />
+          </div>
+        )}
 
-              {/* Book Details */}
-              <div className="flex-1 space-y-4">
-                <Link href={`/book/${encodeURIComponent(selectedBook.title)}`}>
-                  <h3 className="text-2xl font-bold underline">{selectedBook.title}</h3>
-                </Link>
-                <Link href={`/author/${encodeURIComponent(selectedBook.author)}`}>
-                <p className="text-lg text-gray-700">By: <span className="underline">{selectedBook.author}</span></p>
-                </Link>
-                
-                {/* Weeks on List */}
-                {selectedBook.weeks_on_list > 0 && (
-                  <p className="text-gray-600 text-sm">
-                    📚 On the bestseller list for <strong>{selectedBook.weeks_on_list}</strong> weeks
-                  </p>
-                )}
+        {/* Book Details */}
+        <div className="flex flex-col flex-grow text-left">
+          <Link href={`/book/${encodeURIComponent(selectedBook.title)}`}>
+            <h3 className="text-2xl font-bold underline">{selectedBook.title}</h3>
+          </Link>
+          <Link href={`/author/${encodeURIComponent(selectedBook.author)}`}>
+            <p className="text-lg text-gray-700 mt-1">By: <span className="underline">{selectedBook.author}</span></p>
+          </Link>
 
-                {/* ISBN Numbers */}
-                <p className="text-gray-600 text-sm">
-                  <strong>ISBN-10:</strong> {selectedBook.primary_isbn10 || "N/A"}<br />
-                  <strong>ISBN-13:</strong> {selectedBook.primary_isbn13 || "N/A"}
-                </p>
+          {/* Weeks on List */}
+          {selectedBook.weeks_on_list > 0 && (
+            <p className="text-gray-600 text-sm mt-4">
+              📚 On the bestseller list for <strong>{selectedBook.weeks_on_list}</strong> weeks
+            </p>
+          )}
 
-                {/* Book Description */}
-                <p className="text-sm text-gray-800">Description: {selectedBook.description || "No description available."}</p>
+          {/* ISBN Numbers */}
+          <p className="text-gray-600 text-sm mt-4">
+              <strong>ISBN-10:</strong> {selectedBook.primary_isbn10 || "N/A"}<br />
+              <strong>ISBN-13:</strong> {selectedBook.primary_isbn13 || "N/A"}
+          </p>
 
-                {/* Buy Links Section */}
-                {selectedBook.buy_links?.length > 0 && (
-                  <div className="mt-4">
-                    <h4 className="text-lg font-semibold">Where to buy this book (US stores):</h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
-                      {selectedBook.buy_links.map((link, index) => (
-                        <a
-                          key={index}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 bg-offBlack text-white text-sm font-medium p-2 rounded-lg hover:bg-beige hover:text-offBlack transition"
-                        >
-                          {getStoreIcon(link.name)}
-                          {link.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+          <p className="text-gray-600 my-4">Description: {selectedBook.description || "No description available."}</p>
+
+          {/* Buy Links - Styled as Buttons */}
+          <h4 className="text-lg font-semibold mb-4">Where to buy this book (US stores):</h4>
+          <div className="flex flex-wrap gap-3">
+            {selectedBook.buy_links?.map((link, index) => (
+              <a
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-offBlack text-white text-sm font-medium p-2 rounded-lg hover:bg-beige hover:text-offBlack transition"
+              >
+                {getStoreIcon(link.name)}
+                {link.name}
+              </a>
+            ))}
           </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
