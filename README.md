@@ -1,4 +1,4 @@
-# 📚 NYT Bestsellers Web App
+# 📚 Spellbound: NYT Bestsellers Web App
 
 ## 📝 Project Overview
 This project is a **Next.js** web application that fetches and displays the latest **New York Times Bestsellers**. It includes an interactive navigation bar with dropdowns for **Authors** and **Categories**, allowing users to browse books efficiently. The app dynamically updates its content based on API data and includes real-time notifications when bestseller lists change.
