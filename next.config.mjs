@@ -10,6 +10,10 @@ const nextConfig = {
           protocol: "https",
           hostname: "www.nytimes.com", // If NYT images come from this domain
         },
+        {
+          protocol: "https",
+          hostname: "static01.nyt.com",
+        },
       ],
     },
   };
